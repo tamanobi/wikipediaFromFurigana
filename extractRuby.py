@@ -5,23 +5,15 @@ import codecs
 
 # FuriganaExtractor: 固有名詞とふりがなのペアを作る
 # nextPair: 次の固有名詞とふりがなのペアを返す
-# isEOF: ファイル終端かどうか確認する
-# セクションが見つかったらタイトルを見つけるまでスキップ
-# 元の文字を保存する
-# ふりがなを保存する
-## 挙動
-# page titleを見つける
-# カテゴリを見つける
-# 本文を見つける
 class FuriganaExtractor:
-  """"""
+  """固有名詞とふりがなのペアを作る"""
   def __init__(self, _filename):
     self.filename = _filename
     self.title_found = False
     self.isComplete = False
    
     title_regex = u'^(\[){2}(?P<title>[^\[\]]*)(\]){2}$'
-    ruby_regex = u'^([「『《]*)(?P<noun>[^[*(（」』》]+)([」』》]*)([（(](.*?))(?P<ruby>[^）):：;；,，、「『《]+)[,，、）『「《)。]'
+    ruby_regex = u'^([「『《]*)(?P<noun>[^[*(（」』》]+)([」』》]*)([（(](.*?))(?P<ruby>[^）):：;；,，、「『《]+)([,，、）『「《)。])'
     section_regex = u'^[=]+([^=]*)[=]+$'
     kana_regex = u'^[ 　ァ-ヾｦ-ﾟぁ-ゟ]+$' #日本語だよ
     redirect_regex = u'^((#REDIRECT)|(#転送))'
@@ -59,6 +51,8 @@ class FuriganaExtractor:
             title = ruby_match.group('noun')
             furigana = ruby_match.group('ruby')
             if re.match('^[a-zA-Z ]+$',furigana):
+              pass
+            elif re.match(u'^[0-9]+[月][0-9]+[日]$',title):
               pass
             else:
               return (title, furigana)
