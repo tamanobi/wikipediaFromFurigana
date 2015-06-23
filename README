@@ -1,1 +1,5 @@
-## retrieve ruby(word) from Wikipedia articles
+## retrieve ruby(word) from Wikipedia articles ##
+wikipediaのarticlesファイルから、単語とふりがなのペアを(TSV形式)で抜き出す
+
+## Python3で動作します ##
+Python3で動作します。ただし、いくつか問題を抱えています。
