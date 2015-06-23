@@ -21,7 +21,7 @@ class FuriganaExtractor:
     self.isComplete = False
    
     title_regex = u'^(\[){2}(?P<title>[^\[\]]*)(\]){2}$'
-    ruby_regex = u'^([「『《]*)(?P<noun>[^[*(（」』》]+)([」』》]*)([（(](.*?))(?P<ruby>[^）):：;；,，、「『《]+)[,，、）『「《)]'
+    ruby_regex = u'^([「『《]*)(?P<noun>[^[*(（」』》]+)([」』》]*)([（(](.*?))(?P<ruby>[^）):：;；,，、「『《]+)[,，、）『「《)。]'
     section_regex = u'^[=]+([^=]*)[=]+$'
     kana_regex = u'^[ 　ァ-ヾｦ-ﾟぁ-ゟ]+$' #日本語だよ
     redirect_regex = u'^((#REDIRECT)|(#転送))'
@@ -58,7 +58,10 @@ class FuriganaExtractor:
             self.title_found = False
             title = ruby_match.group('noun')
             furigana = ruby_match.group('ruby')
-            return (title, furigana)
+            if re.match('^[a-zA-Z ]+$',furigana):
+              pass
+            else:
+              return (title, furigana)
         else:
           title_match = self.title_prog.match(line)
           if title_match:
