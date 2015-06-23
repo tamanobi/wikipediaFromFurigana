@@ -1,4 +1,6 @@
-.txt
-/test
-.swp
+.gitignore
 .python-version
+*.txt
+*.swp
+
+/test
