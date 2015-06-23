@@ -12,7 +12,7 @@ class FuriganaExtractor:
     self.title_found = False
     self.isComplete = False
    
-    title_regex = u'^(\[){2}(?P<title>[^\[\]]*)(\]){2}$'
+    title_regex = u'^(\[){2}(?P<title>[^\[\]]+)(\]){2}$'
     ruby_regex = u'^([「『《]*)(?P<noun>[^[、。*(（」』》]+)([」』》]*)([（(](.*?))(?P<ruby>[^、）):：;；,，、「『《]+)([,，、(（）『「《)。\-])'
     section_regex = u'^[=]+([^=]*)[=]+$'
     kana_regex = u'^[ 　ァ-ヾｦ-ﾟぁ-ゟ]+$' #日本語だよ
@@ -33,6 +33,18 @@ class FuriganaExtractor:
         if not line:
           self.isComplete = True
           return
+
+        title_match = self.title_prog.match(line)
+        if title_match:
+          self.title_found = True
+          kana_match = self.kana_prog.match(title_match.group('title'))
+          print '******'+title_match.group('title')
+          if kana_match:
+            # タイトルが,かなだけなら
+            self.title_found = False
+            title = kana_match.group(0)
+            furigana = title
+            return (title, furigana)
 
         if self.title_found:
           section_match = self.section_prog.match(line)
@@ -64,17 +76,6 @@ class FuriganaExtractor:
             elif res > -1:
               pass
             else:
-              return (title, furigana)
-        else:
-          title_match = self.title_prog.match(line)
-          if title_match:
-            self.title_found = True
-            kana_match = self.kana_prog.match(title_match.group('title'))
-            if kana_match:
-              # タイトルが,かなだけなら
-              self.title_found = False
-              title = kana_match.group(0)
-              furigana = title
               return (title, furigana)
   def Complete(self):
     return self.isComplete
