@@ -13,7 +13,7 @@ class FuriganaExtractor:
     self.isComplete = False
    
     title_regex = u'^(\[){2}(?P<title>[^\[\]]*)(\]){2}$'
-    ruby_regex = u'^([「『《]*)(?P<noun>[^[*(（」』》]+)([」』》]*)([（(](.*?))(?P<ruby>[^）):：;；,，、「『《]+)([,，、）『「《)。])'
+    ruby_regex = u'^([「『《]*)(?P<noun>[^[*(（」』》]+)([」』》]*)([（(](.*?))(?P<ruby>[^）):：;；,，、「『《]+)([,，、）『「《)。\-])'
     section_regex = u'^[=]+([^=]*)[=]+$'
     kana_regex = u'^[ 　ァ-ヾｦ-ﾟぁ-ゟ]+$' #日本語だよ
     redirect_regex = u'^((#REDIRECT)|(#転送))'
@@ -50,7 +50,11 @@ class FuriganaExtractor:
             self.title_found = False
             title = ruby_match.group('noun')
             furigana = ruby_match.group('ruby')
-            if re.match('^[a-zA-Z ]+$',furigana):
+            title = re.sub(r'\[[/]*(tpl)\]', '', title, 2)
+            furigana = re.sub(u'[0-9]+[年][0-9]+[月][0-9]+[日]', '', furigana)
+            furigana = re.sub(r'\[[/]*(tpl)\]', '', furigana, 2)
+            furigana = re.sub(u'[^ァ-ヾｦ-ﾟぁ-ゟ]*$', '', furigana, 2)
+            if re.match('^[a-zA-Z|\- ]+$',furigana):
               pass
             elif re.match(u'^[0-9]+[月][0-9]+[日]$',title):
               pass
