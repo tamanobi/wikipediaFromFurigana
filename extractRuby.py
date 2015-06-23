@@ -20,8 +20,8 @@ class FuriganaExtractor:
     self.title_found = False
     self.isComplete = False
    
-    title_regex = u'^(\[)+(?P<title>[^\[\]]*)(\])+$'
-    ruby_regex = u'^([「『《]*)(?P<noun>[^*(（」』》]+)([」』》]*)([（(](.*?))(?P<ruby>[^）):：;；,，、「『《]+)[,，、）『「《)]'
+    title_regex = u'^(\[){2}(?P<title>[^\[\]]*)(\]){2}$'
+    ruby_regex = u'^([「『《]*)(?P<noun>[^[*(（」』》]+)([」』》]*)([（(](.*?))(?P<ruby>[^）):：;；,，、「『《]+)[,，、）『「《)]'
     section_regex = u'^[=]+([^=]*)[=]+$'
     kana_regex = u'^[ 　ァ-ヾｦ-ﾟぁ-ゟ]+$' #日本語だよ
     redirect_regex = u'^((#REDIRECT)|(#転送))'
