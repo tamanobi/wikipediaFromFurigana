@@ -105,4 +105,4 @@ if __name__ == '__main__':
     while ext.Complete() is False:
       pair = ext.nextPair()
       if pair:
-        print pair[0]+'\t'+pair[1]+'\t'+pair[2]
+        print pair[0]+'\t'+pair[2]
