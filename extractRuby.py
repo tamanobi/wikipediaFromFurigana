@@ -2,6 +2,7 @@
 
 import re
 import codecs
+import sys
 
 # FuriganaExtractor: 固有名詞とふりがなのペアを作る
 # nextPair: 次の固有名詞とふりがなのペアを返す
@@ -97,8 +98,11 @@ class FuriganaExtractor:
     return self.isComplete
 
 if __name__ == '__main__':
-  ext = FuriganaExtractor('jawiki-latest-pages-articles.xml-002.txt')
-  while ext.Complete() is False:
-    pair = ext.nextPair()
-    if pair:
-      print pair[0]+'\t'+pair[1]+'\t'+pair[2]
+  argvs = sys.argv
+  argc = len(argvs)
+  if argc == 2:
+    ext = FuriganaExtractor(argvs[1])
+    while ext.Complete() is False:
+      pair = ext.nextPair()
+      if pair:
+        print pair[0]+'\t'+pair[1]+'\t'+pair[2]
