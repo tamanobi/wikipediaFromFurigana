@@ -11,6 +11,7 @@ class FuriganaExtractor:
     self.filename = _filename
     self.title_found = False
     self.isComplete = False
+    self.page_title = u''
    
     title_regex = u'^(\[){2}(?P<title>[^\[\]]+)(\]){2}$'
     ruby_regex = u'^([「『《]*)(?P<noun>[^[、。*(（」』》]+)([」』》]*)([（(](.*?))(?P<ruby>[^、）):：;；,，、「『《]+)([,，、(（）『「《)。\-])'
@@ -37,14 +38,15 @@ class FuriganaExtractor:
         title_match = self.title_prog.match(line)
         if title_match:
           self.title_found = True
-          kana_match = self.kana_prog.match(title_match.group('title'))
-          print '******'+title_match.group('title')
+          self.page_title = title_match.group('title')
+          kana_match = self.kana_prog.match(self.page_title)
+          #print '******'+self.page_title
           if kana_match:
             # タイトルが,かなだけなら
             self.title_found = False
-            title = kana_match.group(0)
-            furigana = title
-            return (title, furigana)
+            noun = kana_match.group(0)
+            furigana = noun
+            return (self.page_title, noun, furigana)
 
         if self.title_found:
           section_match = self.section_prog.match(line)
@@ -60,23 +62,26 @@ class FuriganaExtractor:
           elif ruby_match:
             # ルビを見つけたら
             self.title_found = False
-            title = ruby_match.group('noun')
+            noun = ruby_match.group('noun')
             furigana = ruby_match.group('ruby')
-            title = re.sub(u'\[[/]*(tpl)\]', '', title, 2)
+            noun = re.sub(u'\[[/]*(tpl)\]', '', noun, 2)
             furigana = re.sub(u'\[[/]*(tpl)\]', '', furigana, 2)
             furigana = re.sub(u'[0-9]+[年][0-9]+[月][0-9]+[日]', '', furigana)
             furigana = re.sub(u'[^ァ-ヾｦ-ﾟぁ-ゟ]*$', '', furigana, 2)
-            res = title.rfind(u'一覧')
+            res = noun.rfind(u'一覧')
+            # ゴミ除去
             if re.match('^[a-zA-Z|\- ]+$',furigana):
               pass
-            elif re.match(u'^[0-9]+[月][0-9]+[日]$',title):
+            elif re.match(u'^[0-9]+[月][0-9]+[日]$',noun):
               pass
-            elif len(furigana) < 2 or len(title) < 2:
+            elif len(furigana) < 2 or len(noun) < 2:
+              pass
+            elif re.match(u'[^ァ-ヾｦ-ﾟぁ-ゟ－ 　]+',furigana):
               pass
             elif res > -1:
               pass
             else:
-              return (title, furigana)
+              return (self.page_title, noun, furigana)
   def Complete(self):
     return self.isComplete
 
@@ -85,4 +90,4 @@ if __name__ == '__main__':
   while ext.Complete() is False:
     pair = ext.nextPair()
     if pair:
-      print pair[0],pair[1]
+      print pair[0]+'\t'+pair[1]+'\t'+pair[2]
