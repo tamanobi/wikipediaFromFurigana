@@ -71,26 +71,35 @@ class FuriganaExtractor:
               self.title_found = False
               noun = ruby_match.group('noun')
               furigana = ruby_match.group('ruby')
+
+              # ゴミ除去
               noun = re.sub(u'\[[/]*(tpl)\]', '', noun, 2)
               furigana = re.sub(u'\[[/]*(tpl)\]', '', furigana, 2)
               furigana = re.sub(u'[0-9]+[年][0-9]+[月][0-9]+[日]', '', furigana)
               furigana = re.sub(u'[^ァ-ヾｦ-ﾟぁ-ゟ]*$', '', furigana, 2)
               ichiran = noun.rfind(u'一覧')
+              jinbutsu = noun.find(u'登場人物')
+              sakuhin = noun.find(u'作品')
               mataha = furigana.find(u'または')
-              # ゴミ除去
               if re.match('^[a-zA-Z|\- ]+$',furigana):
                 pass
               elif re.match(u'^[0-9]+[月][0-9]+[日]$',noun):
                 pass
               elif len(furigana) < 2 or len(noun) < 2:
                 pass
-              elif re.match(u'[^ァ-ヾｦ-ﾟぁ-ゟ－ 　]+',furigana):
+              elif re.search(u'[^ァ-ヾｦ-ﾟぁ-ゟ－ 　]+',furigana):
                 pass
               elif ichiran > -1:
                 # 一覧を含む文字列
                 pass
               elif mataha > -1:
                 # または
+                pass
+              elif jinbutsu > -1:
+                # 人物を含む文字列
+                pass
+              elif sakuhin > -1:
+                # 作品を含む文字列
                 pass
               else:
                 return (self.page_title, noun, furigana)
