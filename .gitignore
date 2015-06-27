@@ -1,6 +1,9 @@
 .gitignore
 .python-version
 *.txt
+*.pyc
 *.swp
+*.dic
+*.csv
 
 /test
